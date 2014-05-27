@@ -30,7 +30,8 @@ To this line:
 
 ```
 $e = new \Exception;
-$this->queries[++$this->currentQuery] = array('sql' => $sql, 'params' => $params, 'types' => $types, 'executionMS' => 0, 'stacktrace' => $e->getTraceAsString());
+$shortTrace = explode("\n", $e->getTraceAsString())[5];
+$this->queries[++$this->currentQuery] = array('sql' => $sql, 'params' => $params, 'types' => $types, 'executionMS' => 0, 'stacktrace' => $e->getTraceAsString(), 'shortstack' => $shortTrace);
 ```
 
 If you happen to know how to do this properly, please make a PR!

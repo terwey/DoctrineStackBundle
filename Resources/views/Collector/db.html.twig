@@ -70,7 +70,7 @@
                                 <img alt="+" src="{{ asset('bundles/framework/images/blue_picto_more.gif') }}" style="display: inline;" />
                                 <img alt="-" src="{{ asset('bundles/framework/images/blue_picto_less.gif') }}" style="display: none;" />
                                 <span style="display: none">Shrink query</span>
-                                <span id="smallcode-{{ i }}-{{ loop.parent.loop.index }}">
+                                <span id="smallcode-query-{{ i }}-{{ loop.parent.loop.index }}">
                                     {{ query.sql|doctrine_minify_query|raw }}
                                 </span>
                             </div>
@@ -83,11 +83,11 @@
                             <small>
                                 <strong>Parameters</strong>: {{ query.params|yaml_encode }} <br />
                                 [<span id="expandParams-{{ i }}-{{ loop.parent.loop.index }}" onclick="javascript:toggleCodeBlock(this, 'query');" target-data-id="original-query-{{ i }}-{{ loop.parent.loop.index }}" style="cursor: pointer;">Display runnable query</span>]<br/>
-                                <strong>Time</strong>: {{ '%0.2f'|format(query.executionMS * 1000) }} ms
-                                <strong>Stacktrace</strong>: <br />
+                                <strong>Time</strong>: {{ '%0.2f'|format(query.executionMS * 1000) }} ms<br />
+                                <strong>Stacktrace</strong>: {{ query.shortstack }}<br />
                                 [<span id="expandStack-{{ i }}-{{ loop.parent.loop.index }}" onclick="javascript:toggleCodeBlock(this, 'stack');" target-data-id="original-stack-{{ i }}-{{ loop.parent.loop.index }}" style="cursor: pointer;">Display Stackstrace</span>]<br/>
                                 <span id="original-stack-{{ i }}-{{ loop.parent.loop.index }}" style="display: none;">
-                                    {{ query.stacktrace }}
+                                    <pre>{{ query.stacktrace }}</pre>
                                 </span>
                             </small>
                             {% if query.explainable %}
@@ -230,7 +230,7 @@
                     target.innerHTML = 'Hide Stacktrace';
                 }
 
-                document.getElementById('smallcode' + targetId).style.display = 'none';
+                document.getElementById('smallcode-'+type + targetId).style.display = 'none';
                 document.getElementById('code' + targetId).style.display = 'none';
 
                 elem = document.getElementById('code' + targetId).parentElement.children[0];
@@ -247,7 +247,7 @@
                     target.innerHTML = 'Display Stacktrace';
                 }
 
-                document.getElementById('smallcode' + targetId).style.display = 'inline';
+                document.getElementById('smallcode-'+type + targetId).style.display = 'inline';
             }
         }
 
