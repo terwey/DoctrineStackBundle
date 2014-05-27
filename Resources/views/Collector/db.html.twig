@@ -82,10 +82,10 @@
                             </span>
                             <small>
                                 <strong>Parameters</strong>: {{ query.params|yaml_encode }} <br />
-                                [<span id="expandParams-{{ i }}-{{ loop.parent.loop.index }}" onclick="javascript:toggleRunnableQuery(this);" target-data-id="original-query-{{ i }}-{{ loop.parent.loop.index }}" style="cursor: pointer;">Display runnable query</span>]<br/>
+                                [<span id="expandParams-{{ i }}-{{ loop.parent.loop.index }}" onclick="javascript:toggleCodeBlock(this, 'query');" target-data-id="original-query-{{ i }}-{{ loop.parent.loop.index }}" style="cursor: pointer;">Display runnable query</span>]<br/>
                                 <strong>Time</strong>: {{ '%0.2f'|format(query.executionMS * 1000) }} ms
-                                <strong>Stack</strong>: <br />
-                                [<span id="expandStack-{{ i }}-{{ loop.parent.loop.index }}" onclick="javascript:toggleRunnableQuery(this);" target-data-id="original-stack-{{ i }}-{{ loop.parent.loop.index }}" style="cursor: pointer;">Display stackstrace</span>]<br/>
+                                <strong>Stacktrace</strong>: <br />
+                                [<span id="expandStack-{{ i }}-{{ loop.parent.loop.index }}" onclick="javascript:toggleCodeBlock(this, 'stack');" target-data-id="original-stack-{{ i }}-{{ loop.parent.loop.index }}" style="cursor: pointer;">Display Stackstrace</span>]<br/>
                                 <span id="original-stack-{{ i }}-{{ loop.parent.loop.index }}" style="display: none;">
                                     {{ query.stacktrace }}
                                 </span>
@@ -217,14 +217,18 @@
             return false;
         }
 
-        function toggleRunnableQuery(target) {
-            var targetId = target.getAttribute('target-data-id').replace('original-query', ''),
+        function toggleCodeBlock(target, type) {
+            var targetId = target.getAttribute('target-data-id').replace('original-'+type, ''),
                 targetElement = document.getElementById(target.getAttribute('target-data-id')),
                 elem;
 
             if (targetElement.style.display != 'block') {
                 targetElement.style.display = 'block';
-                target.innerHTML = 'Hide runnable query';
+                if (type == 'query') {
+                    target.innerHTML = 'Hide runnable query';
+                } else {
+                    target.innerHTML = 'Hide Stacktrace';
+                }
 
                 document.getElementById('smallcode' + targetId).style.display = 'none';
                 document.getElementById('code' + targetId).style.display = 'none';
@@ -237,7 +241,11 @@
 
             } else {
                 targetElement.style.display = 'none';
-                target.innerHTML = 'Display runnable query';
+                if (type == 'query') {
+                    target.innerHTML = 'Display runnable query';
+                } else {
+                    target.innerHTML = 'Display Stacktrace';
+                }
 
                 document.getElementById('smallcode' + targetId).style.display = 'inline';
             }
