@@ -25,26 +25,15 @@ use Doctrine\DBAL\Logging\DebugStack as BaseController;
 
 class DebugStack extends BaseController;
 {
-    ///** @var array $queries Executed SQL queries. */
-    //public $queries = array();
-
-    ///** @var boolean $enabled If Debug Stack is enabled (log queries) or not. */
-    //public $enabled = true;
-
-    //public $start = null;
-
-    //public $currentQuery = 0;
-
     /**
      * {@inheritdoc}
      */
-    public function startQuery($sql, array $params = null, array $types = null)
+	public function startQuery($sql, array $params = null, array $types = null)
     {
-		parent::startQuery($sql, $params, $types);
-
         if ($this->enabled) {
+            $this->start = microtime(true);
 			$e = new \Exception;
-            $this->queries[++$this->currentQuery]['stacktrace'] = $e->getTraceAsString();
+            $this->queries[++$this->currentQuery] = array('sql' => $sql, 'params' => $params, 'types' => $types, 'executionMS' => 0, 'stacktrace' => $e->getTraceAsString());
         }
     }
 }
